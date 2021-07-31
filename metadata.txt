@@ -12,8 +12,8 @@ email=enzo.ccc@gmail.com
 
 about=import raster  into spatialite 5 database
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/enzococca/qgis2rasterlite
+repository=https://github.com/enzococca/qgis2rasterlite
 # End of mandatory metadata
 
 # Recommended items:
@@ -25,7 +25,7 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=http://homepage
+homepage=https://github.com/enzococca/qgis2rasterlite
 category=Plugins
 icon=icon.png
 # experimental flag
