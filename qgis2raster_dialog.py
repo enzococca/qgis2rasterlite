@@ -95,9 +95,14 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
             driver= str(self.comboBox_driver.currentText())
             # text_ = cmd, self.comboBox_compare.currentText(), db1 + ' ', db2
             # result = subprocess.check_output([text_], stderr=subprocess.STDOUT)
-            self.list.addItem(str(os.system("gdal_translate -of Rasterlite " + str(raster) +  " RASTERLITE:" + str(database) + ",table="+str(table_n) + " -co DRIVER=" + str(driver))))
-           
-
+            self.list.addItem(str("gdal_translate -of Rasterlite " + str(raster) +  "\n RASTERLITE:" + str(database) + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
+            params=os.system("gdal_translate -of Rasterlite " + str(raster) +  " RASTERLITE:" + str(database) + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
+            self.list.addItem("...........................\n\n")
+            
+            if params==0:
+                self.list.addItem("Raster imported\n\n")
+            else:
+                self.list.addItem("Error!!\n\n")
         except Exception as e:
             QMessageBox.warning(self, "Attenzione",
                                      str(e),

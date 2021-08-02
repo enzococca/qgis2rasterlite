@@ -6,177 +6,97 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>551</width>
     <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>qgis2rasterlite</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>131</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Raster input</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>130</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Table name</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>80</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>DB spatialite</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>180</y>
-     <width>47</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Driver</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox_driver">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>200</y>
-     <width>69</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>GTIFF</string>
-    </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Raster input</string>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>JPEG</string>
-    </property>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLineEdit" name="lineEdit_raster"/>
    </item>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_table_name">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>150</y>
-     <width>113</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>230</y>
-     <width>47</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>log</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_import">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>410</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Import</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_raster">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>281</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_database">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>281</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="toolButton_raster">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>50</y>
-     <width>25</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="toolButton_database">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>100</y>
-     <width>25</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="list">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>250</y>
-     <width>361</width>
-     <height>141</height>
-    </rect>
-   </property>
-  </widget>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="toolButton_raster">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>DB spatialite</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLineEdit" name="lineEdit_database"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QToolButton" name="toolButton_database">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Table name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLineEdit" name="lineEdit_table_name"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Driver</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QComboBox" name="comboBox_driver">
+     <item>
+      <property name="text">
+       <string>GTIFF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>JPEG</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>log</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" colspan="3">
+    <widget class="QListWidget" name="list"/>
+   </item>
+   <item row="10" column="1" colspan="2">
+    <widget class="QPushButton" name="pushButton_import">
+     <property name="text">
+      <string>Import</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
