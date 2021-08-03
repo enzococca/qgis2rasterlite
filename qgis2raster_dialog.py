@@ -32,6 +32,8 @@ from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import  QtWidgets 
 from qgis.core import  *
+from qgis.core import QgsMapLayerProxyModel
+from qgis.gui import  *
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -50,7 +52,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setupUi(self)
         self.toolButton_raster.clicked.connect(self.setPathraster)
         self.toolButton_database.clicked.connect(self.setPathDB)
-    
+        self.comboBox_raster.setFilters(QgsMapLayerProxyModel.RasterLayer)
     
     def setPathraster(self):
         
@@ -64,7 +66,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         #filename=dbpath.split("/")[-1]
         if dbpath:
 
-            self.lineEdit_raster.setText(dbpath)
+            self.comboBox_raster.setEditText(dbpath)
             s.setValue('',dbpath)
     
     def setPathDB(self):
@@ -78,7 +80,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         #filename=dbpath.split("/")[-1]
         if filename:
 
-            self.lineEdit_database.setText(filename)
+            self.comboBox_database.setEditText(filename)
             s.setValue('',filename)
     
     
@@ -89,14 +91,14 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         
         
         try:
-            raster = str(self.lineEdit_raster.text())
-            database = str(self.lineEdit_database.text())
+            raster = self.comboBox_raster.currentLayer()
+            database = str(self.comboBox_database.currentText())
             table_n= str(self.lineEdit_table_name.text())
             driver= str(self.comboBox_driver.currentText())
             # text_ = cmd, self.comboBox_compare.currentText(), db1 + ' ', db2
             # result = subprocess.check_output([text_], stderr=subprocess.STDOUT)
-            self.list.addItem(str("gdal_translate -of Rasterlite " + str(raster) +  "\n RASTERLITE:" + str(database) + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
-            params=os.system("gdal_translate -of Rasterlite " + str(raster) +  " RASTERLITE:" + str(database) + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
+            self.list.addItem(str("gdal_translate -of Rasterlite " + str(raster.source()) +  "\n RASTERLITE:" + str(database) + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
+            params=os.system("gdal_translate -of Rasterlite " + str(raster.source()) +  " RASTERLITE:" + str(database) + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
             self.list.addItem("...........................\n\n")
             
             if params==0:

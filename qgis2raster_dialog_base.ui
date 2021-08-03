@@ -21,9 +21,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_raster"/>
-   </item>
    <item row="1" column="2">
     <widget class="QToolButton" name="toolButton_raster">
      <property name="text">
@@ -37,9 +34,6 @@
       <string>DB spatialite</string>
      </property>
     </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_database"/>
    </item>
    <item row="3" column="2">
     <widget class="QToolButton" name="toolButton_database">
@@ -96,8 +90,35 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox_database">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QgsMapLayerComboBox" name="comboBox_raster">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="allowEmptyLayer">
+      <bool>true</bool>
+     </property>
+     <property name="showCrs">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
