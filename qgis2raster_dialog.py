@@ -24,16 +24,16 @@
 
 import os
 import subprocess
+import platform
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import QDesktopServices
-from qgis.PyQt.QtCore import  pyqtSlot, pyqtSignal,QThread,QUrl
+from qgis.PyQt.QtCore import  pyqtSlot, pyqtSignal,QThread,QUrl,QSettings,Qt
 from qgis.PyQt.QtWidgets import QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox
 from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import  QtWidgets 
 from qgis.core import  *
-from qgis.core import QgsMapLayerProxyModel
-from qgis.gui import  *
+
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -53,6 +53,24 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         self.toolButton_raster.clicked.connect(self.setPathraster)
         self.toolButton_database.clicked.connect(self.setPathDB)
         self.comboBox_raster.setFilters(QgsMapLayerProxyModel.RasterLayer)
+        self.test()
+        #self.comboBox_database.activated[str].connect(self.test)
+    def test(self):    
+        
+        p = QgsProviderRegistry.instance().providerMetadata('spatialite')
+        
+        a=self.comboBox_database.addItems(p.connections())
+        
+        index = self.comboBox_database.findText(a, Qt.MatchFixedString)
+        if index >= 0:
+            self.comboBox_database.setCurrentIndex(index)
+        con = p.connections()[self.comboBox_database.currentText()]
+        if platform.system() == "Windows":
+            conn=con.uri().replace("dbname=",'').replace("'","").replace("/","\\")
+        else:
+            conn=con.uri().replace("dbname=",'').replace("'","")
+        return conn
+        
     
     def setPathraster(self):
         
@@ -84,21 +102,18 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
             s.setValue('',filename)
     
     
+    
+    
     def on_pushButton_import_pressed(self):
-        #QMessageBox.warning(self, "Attenzione",
-        #                            "Assicurati che il nome del db non abbia parentesi o caratteri spaciali, altrimenti la conversione fallisce",
-        #                             QMessageBox.Ok)
-        
-        
+        self.comboBox_raster.update()
         try:
             raster = self.comboBox_raster.currentLayer()
-            database = str(self.comboBox_database.currentText())
+            database=self.test()
             table_n= str(self.lineEdit_table_name.text())
             driver= str(self.comboBox_driver.currentText())
-            # text_ = cmd, self.comboBox_compare.currentText(), db1 + ' ', db2
-            # result = subprocess.check_output([text_], stderr=subprocess.STDOUT)
-            self.list.addItem(str("gdal_translate -of Rasterlite " + str(raster.source()) +  "\n RASTERLITE:" + str(database) + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
-            params=os.system("gdal_translate -of Rasterlite " + str(raster.source()) +  " RASTERLITE:" + str(database) + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
+            
+            self.list.addItem(str("gdal_translate -of Rasterlite " +str(raster.source()) +  "\n RASTERLITE:" + database  + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
+            params=os.system("gdal_translate -of Rasterlite " + '"'+str(raster.source()) + '"'+  " RASTERLITE:" + database + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
             self.list.addItem("...........................\n\n")
             
             if params==0:
