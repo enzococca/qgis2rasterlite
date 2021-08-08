@@ -7,65 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>551</width>
-    <height>446</height>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>qgis2rasterlite</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Raster input</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_raster"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QToolButton" name="toolButton_raster">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>DB spatialite</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_database"/>
-   </item>
-   <item row="3" column="2">
-    <widget class="QToolButton" name="toolButton_database">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Table name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QLineEdit" name="lineEdit_table_name"/>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Driver</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QComboBox" name="comboBox_driver">
      <item>
       <property name="text">
@@ -79,25 +31,94 @@
      </item>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_5">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>log</string>
+      <string>Raster input</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="3">
-    <widget class="QListWidget" name="list"/>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Table name</string>
+     </property>
+    </widget>
    </item>
-   <item row="10" column="1" colspan="2">
+   <item row="11" column="1" colspan="2">
     <widget class="QPushButton" name="pushButton_import">
      <property name="text">
       <string>Import</string>
      </property>
     </widget>
    </item>
+   <item row="10" column="0" colspan="3">
+    <widget class="QListWidget" name="list"/>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QgsMapLayerComboBox" name="comboBox_raster">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="allowEmptyLayer">
+      <bool>true</bool>
+     </property>
+     <property name="showCrs">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>DB spatialite</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>log</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="toolButton_raster">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QToolButton" name="toolButton_database">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Driver</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox_database">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
