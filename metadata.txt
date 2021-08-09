@@ -6,7 +6,7 @@
 name=qgis2rasterlite
 qgisMinimumVersion=3.16.0
 description=import raster into spatialite5  database
-version=0.2
+version=0.4
 author=Enzo Cocca, adArte srl
 email=enzo.ccc@gmail.com
 
@@ -20,7 +20,17 @@ repository=https://github.com/enzococca/qgis2rasterlite
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=release0.2
+changelog=release0.4
+	- update form: automatic fill table name
+	- remove external path
+	-------------------------------------------------------------------------------
+
+   release0.3
+	- update combobo raster layer
+	- update connection sqlite data provider
+	-------------------------------------------------------------------------------
+
+	release0.2
 	- adjust size form
 	- add log into liswidget
 	-------------------------------------------------------------------------------

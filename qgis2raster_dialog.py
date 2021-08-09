@@ -50,8 +50,8 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.toolButton_raster.clicked.connect(self.setPathraster)
-        self.toolButton_database.clicked.connect(self.setPathDB)
+        # self.toolButton_raster.clicked.connect(self.setPathraster)
+        # self.toolButton_database.clicked.connect(self.setPathDB)
         self.comboBox_raster.setFilters(QgsMapLayerProxyModel.RasterLayer)
         self.test()
         #self.comboBox_database.activated[str].connect(self.test)
@@ -72,34 +72,34 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         return conn
         
     
-    def setPathraster(self):
+    # def setPathraster(self):
         
-        s = QgsSettings()
-        dbpath = QFileDialog.getOpenFileName(
-            self,
-            "Set file name",
-            '',
-            "image (*.*)"
-        )[0]
-        #filename=dbpath.split("/")[-1]
-        if dbpath:
+        # s = QgsSettings()
+        # dbpath = QFileDialog.getOpenFileName(
+            # self,
+            # "Set file name",
+            # '',
+            # "image (*.*)"
+        # )[0]
+        # #filename=dbpath.split("/")[-1]
+        # if dbpath:
 
-            self.comboBox_raster.setEditText(dbpath)
-            s.setValue('',dbpath)
+            # self.comboBox_raster.setEditText(dbpath)
+            # s.setValue('',dbpath)
     
-    def setPathDB(self):
-        s = QgsSettings()
-        filename = QFileDialog.getOpenFileName(
-            self,
-            "Set file name",
-            '',
-            " db sqlite (*.sqlite)"
-        )[0]
-        #filename=dbpath.split("/")[-1]
-        if filename:
+    # def setPathDB(self):
+        # s = QgsSettings()
+        # filename = QFileDialog.getOpenFileName(
+            # self,
+            # "Set file name",
+            # '',
+            # " db sqlite (*.sqlite)"
+        # )[0]
+        # #filename=dbpath.split("/")[-1]
+        # if filename:
 
-            self.comboBox_database.setEditText(filename)
-            s.setValue('',filename)
+            # self.comboBox_database.setEditText(filename)
+            # s.setValue('',filename)
     
     
     
