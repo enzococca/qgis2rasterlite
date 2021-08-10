@@ -33,8 +33,8 @@ from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import  QtWidgets 
 from qgis.core import  *
-
-
+from qgis.gui import  *
+from qgis.utils import iface
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'qgis2raster_dialog_base.ui'))
@@ -44,6 +44,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(Qgis2rasterliteDialog, self).__init__(parent)
+        
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -125,3 +126,26 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
                                      str(e),
                                      QMessageBox.Ok)
     
+    
+    def on_pushButton_vacuum_pressed(self):
+        
+        database=self.test()
+        self.list.addItem(str("ogrinfo "+ database + " -sql 'VACUUM'"))
+        params=os.system("ogrinfo "+ database + " -sql 'VACUUM'")  
+        if params==0:
+                self.list.addItem("VACUUM OK\n\n")
+        else:
+            self.list.addItem("Error!!\n\n")
+            
+        
+    def on_pushButton_load_pressed(self):    
+        
+        uri=self.test()
+        table_n= str(self.lineEdit_table_name.text())
+        rlayer = iface.addRasterLayer(uri, table_n, 'gdal')
+        if not rlayer.isValid():
+            self.list.addItem(str("Layer failed to load!"))
+        else:
+            QgsProject.instance().addMapLayer(rlayer)
+             
+           
