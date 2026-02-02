@@ -23,17 +23,18 @@
 """
 
 import os
+import re
 import subprocess
 import platform
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import QDesktopServices
-from qgis.PyQt.QtCore import  pyqtSlot, pyqtSignal,QThread,QUrl,QSettings,Qt
-from qgis.PyQt.QtWidgets import QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox
+from qgis.PyQt.QtCore import pyqtSlot, pyqtSignal, QThread, QUrl, QSettings, Qt
+from qgis.PyQt.QtWidgets import QApplication, QDialog, QMessageBox, QFileDialog, QLineEdit, QWidget, QCheckBox
 from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
-from qgis.PyQt import  QtWidgets 
-from qgis.core import  *
-from qgis.gui import  *
+from qgis.PyQt import QtWidgets
+from qgis.core import *
+from qgis.gui import *
 from qgis.utils import iface
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -44,7 +45,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(Qgis2rasterliteDialog, self).__init__(parent)
-        
+
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -53,28 +54,29 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
         self.setupUi(self)
         # self.toolButton_raster.clicked.connect(self.setPathraster)
         # self.toolButton_database.clicked.connect(self.setPathDB)
-        self.comboBox_raster.setFilters(QgsMapLayerProxyModel.RasterLayer)
+        self.comboBox_raster.setFilters(QgsMapLayerProxyModel.Filter.RasterLayer)
         self.test()
         #self.comboBox_database.activated[str].connect(self.test)
-    def test(self):    
-        
+
+    def test(self):
+
         p = QgsProviderRegistry.instance().providerMetadata('spatialite')
-        
-        a=self.comboBox_database.addItems(p.connections())
-        
-        index = self.comboBox_database.findText(a, Qt.MatchFixedString)
+
+        a = self.comboBox_database.addItems(p.connections())
+
+        index = self.comboBox_database.findText(a, Qt.MatchFlag.MatchFixedString)
         if index >= 0:
             self.comboBox_database.setCurrentIndex(index)
         con = p.connections()[self.comboBox_database.currentText()]
         if platform.system() == "Windows":
-            conn=con.uri().replace("dbname=",'').replace("'","").replace("/","\\")
+            conn = con.uri().replace("dbname=", '').replace("'", "").replace("/", "\\")
         else:
-            conn=con.uri().replace("dbname=",'').replace("'","")
+            conn = con.uri().replace("dbname=", '').replace("'", "")
         return conn
-        
-    
+
+
     # def setPathraster(self):
-        
+
         # s = QgsSettings()
         # dbpath = QFileDialog.getOpenFileName(
             # self,
@@ -87,7 +89,7 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
 
             # self.comboBox_raster.setEditText(dbpath)
             # s.setValue('',dbpath)
-    
+
     # def setPathDB(self):
         # s = QgsSettings()
         # filename = QFileDialog.getOpenFileName(
@@ -101,51 +103,122 @@ class Qgis2rasterliteDialog(QtWidgets.QDialog, FORM_CLASS):
 
             # self.comboBox_database.setEditText(filename)
             # s.setValue('',filename)
-    
-    
-    
-    
+
+    def _validate_input(self):
+        """Validate user input before operations."""
+        raster = self.comboBox_raster.currentLayer()
+        if not raster:
+            QMessageBox.warning(self, "Warning",
+                                "Please select a raster layer",
+                                QMessageBox.StandardButton.Ok)
+            return False
+
+        table_n = self.lineEdit_table_name.text().strip()
+        if not table_n:
+            QMessageBox.warning(self, "Warning",
+                                "Table name is required",
+                                QMessageBox.StandardButton.Ok)
+            return False
+
+        if not re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', table_n):
+            QMessageBox.warning(self, "Warning",
+                                "Invalid table name. Use only letters, numbers, and underscore. Must start with letter or underscore.",
+                                QMessageBox.StandardButton.Ok)
+            return False
+
+        if self.comboBox_database.currentText().strip() == '':
+            QMessageBox.warning(self, "Warning",
+                                "Please select a database",
+                                QMessageBox.StandardButton.Ok)
+            return False
+
+        return True
+
     def on_pushButton_import_pressed(self):
         self.comboBox_raster.update()
+
+        if not self._validate_input():
+            return
+
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
             raster = self.comboBox_raster.currentLayer()
-            database=self.test()
-            table_n= str(self.lineEdit_table_name.text())
-            driver= str(self.comboBox_driver.currentText())
-            
-            self.list.addItem(str("gdal_translate -of Rasterlite " +str(raster.source()) +  "\n RASTERLITE:" + database  + "\n,table="+str(table_n) + " -co DRIVER=" + str(driver)))
-            params=os.system("gdal_translate -of Rasterlite " + '"'+str(raster.source()) + '"'+  " RASTERLITE:" + database + ",table="+str(table_n) + " -co DRIVER=" + str(driver))
-            self.list.addItem("...........................\n\n")
-            
-            if params==0:
-                self.list.addItem("Raster imported\n\n")
+            database = self.test()
+            table_n = str(self.lineEdit_table_name.text().strip())
+            driver = str(self.comboBox_driver.currentText())
+
+            cmd = [
+                "gdal_translate",
+                "-of", "Rasterlite",
+                str(raster.source()),
+                f"RASTERLITE:{database},table={table_n}",
+                "-co", f"DRIVER={driver}"
+            ]
+
+            self.list.addItem(f"Executing: {' '.join(cmd)}")
+            self.list.addItem("...........................\n")
+
+            result = subprocess.run(cmd, capture_output=True, text=True)
+
+            if result.returncode == 0:
+                self.list.addItem("Raster imported successfully\n")
+                if result.stdout:
+                    self.list.addItem(f"Output: {result.stdout}")
             else:
-                self.list.addItem("Error!!\n\n")
+                self.list.addItem("Error during import!\n")
+                if result.stderr:
+                    self.list.addItem(f"Error details: {result.stderr}")
+                if result.stdout:
+                    self.list.addItem(f"Output: {result.stdout}")
         except Exception as e:
-            QMessageBox.warning(self, "Attenzione",
-                                     str(e),
-                                     QMessageBox.Ok)
-    
-    
+            QMessageBox.warning(self, "Warning",
+                                str(e),
+                                QMessageBox.StandardButton.Ok)
+        finally:
+            QApplication.restoreOverrideCursor()
+
+
     def on_pushButton_vacuum_pressed(self):
-        
-        database=self.test()
-        self.list.addItem(str("ogrinfo "+ database + " -sql 'VACUUM'"))
-        params=os.system("ogrinfo "+ database + " -sql 'VACUUM'")  
-        if params==0:
-                self.list.addItem("VACUUM OK\n\n")
-        else:
-            self.list.addItem("Error!!\n\n")
-            
-        
-    def on_pushButton_load_pressed(self):    
-        
-        uri=self.test()
-        table_n= str(self.lineEdit_table_name.text())
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        try:
+            database = self.test()
+            cmd = ["ogrinfo", database, "-sql", "VACUUM"]
+
+            self.list.addItem(f"Executing: {' '.join(cmd)}")
+
+            result = subprocess.run(cmd, capture_output=True, text=True)
+
+            if result.returncode == 0:
+                self.list.addItem("VACUUM OK\n")
+            else:
+                self.list.addItem("Error during VACUUM!\n")
+                if result.stderr:
+                    self.list.addItem(f"Error details: {result.stderr}")
+        except Exception as e:
+            QMessageBox.warning(self, "Warning",
+                                str(e),
+                                QMessageBox.StandardButton.Ok)
+        finally:
+            QApplication.restoreOverrideCursor()
+
+    def on_pushButton_load_pressed(self):
+
+        uri = self.test()
+        table_n = str(self.lineEdit_table_name.text().strip())
+
+        if not table_n:
+            QMessageBox.warning(self, "Warning",
+                                "Table name is required",
+                                QMessageBox.StandardButton.Ok)
+            return
+
         rlayer = iface.addRasterLayer(uri, table_n, 'gdal')
-        if not rlayer.isValid():
-            self.list.addItem(str("Layer failed to load!"))
+        if not rlayer or not rlayer.isValid():
+            self.list.addItem("Layer failed to load!")
         else:
             QgsProject.instance().addMapLayer(rlayer)
-             
-           
+            self.list.addItem(f"Layer '{table_n}' loaded successfully\n")
+
+    def on_pushButton_clear_pressed(self):
+        """Clear the log list widget."""
+        self.list.clear()

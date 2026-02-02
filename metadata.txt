@@ -5,8 +5,9 @@
 [general]
 name=qgis2rasterlite
 qgisMinimumVersion=3.16.0
+qgisMaximumVersion=4.99
 description=import raster into spatialite5  database
-version=0.5
+version=0.6
 author=Enzo Cocca, adArte srl
 email=enzo.ccc@gmail.com
 
@@ -19,8 +20,18 @@ repository=https://github.com/enzococca/qgis2rasterlite
 # Recommended items:
 
 hasProcessingProvider=no
+supportsQt6=True
 # Uncomment the following line and add your changelog:
-changelog=release0.5
+changelog=release0.6
+	- Qt6/QGIS 4 compatibility
+	- Replaced os.system with subprocess for better error handling
+	- Added input validation for table names
+	- Added Clear Log button
+	- Added progress indicator (busy cursor) during operations
+	- Improved error messages with GDAL output details
+	-------------------------------------------------------------------------------
+
+   release0.5
 	- add vaccuum
 	- add load raster
 	-------------------------------------------------------------------------------
@@ -45,7 +56,7 @@ changelog=release0.5
 	-------------------------------------------------------------------------------
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python,raster,spatialite,database,import
 
 homepage=https://github.com/enzococca/qgis2rasterlite
 category=Plugins
